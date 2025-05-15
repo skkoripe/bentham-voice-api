@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: bentham-voice-api
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# AWS Configuration
+aws:
+  region: us-west-2
+  transcribe:
+    language-code: en-US
+    sample-rate: 16000
+    enable-partial-results: true
+  polly:
+    voice-id: Joanna
+    output-format: mp3
+  bedrock:
+    model-id: anthropic.claude-3-sonnet-20240229-v1:0
+    temperature: 0.7
+    max-tokens: 1024

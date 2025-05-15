@@ -1,0 +1,16 @@
+# Production environment configuration
+logging:
+  level:
+    root: WARN
+    com.bentham.voiceagent: INFO
+    org.springframework: WARN
+
+# Production-specific AWS settings
+aws:
+  # Use IAM role for production
+  profile: null
+  # Disable AWS SDK debug logging in production
+  sdk:
+    client:
+      logging:
+        enabled: false

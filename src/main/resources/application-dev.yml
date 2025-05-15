@@ -1,0 +1,17 @@
+# Development environment configuration
+logging:
+  level:
+    root: INFO
+    com.bentham.voiceagent: DEBUG
+    org.springframework: INFO
+
+# Development-specific AWS settings
+aws:
+  # Use local credentials from ~/.aws/credentials
+  profile: default
+  # Enable AWS SDK debug logging
+  sdk:
+    client:
+      logging:
+        enabled: true
+        level: BASIC
