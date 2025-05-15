@@ -52,6 +52,44 @@ The Bentham Voice API is built on AWS services with a Java-based backend, levera
 - Appointment scheduling
 - Follow-up reminders and notifications
 
+## Project Structure
+
+```
+bentham-voice-api/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── bentham/
+│   │   │           └── voiceagent/
+│   │   │               ├── config/         # Configuration classes
+│   │   │               ├── controller/     # REST and WebSocket controllers
+│   │   │               ├── model/          # Domain models
+│   │   │               ├── service/        # Service interfaces
+│   │   │               │   └── impl/       # Service implementations
+│   │   │               ├── util/           # Utility classes
+│   │   │               └── BenthamVoiceApiApplication.java
+│   │   └── resources/
+│   │       ├── static/                     # Static resources
+│   │       ├── templates/                  # Templates (if needed)
+│   │       ├── application.yml             # Application configuration
+│   │       └── application-{profile}.yml   # Profile-specific configurations
+│   └── test/
+│       └── java/
+│           └── com/
+│               └── bentham/
+│                   └── voiceagent/
+│                       ├── service/        # Service tests
+│                       ├── controller/     # Controller tests
+│                       └── integration/    # Integration tests
+├── build.gradle                            # Gradle build configuration
+├── settings.gradle                         # Gradle settings
+├── gradlew                                 # Gradle wrapper script
+├── gradlew.bat                             # Gradle wrapper script for Windows
+├── .gitignore                              # Git ignore file
+└── README.md                               # Project documentation
+```
+
 ## Getting Started
 
 ### Prerequisites
@@ -79,17 +117,67 @@ The Bentham Voice API is built on AWS services with a Java-based backend, levera
 
 ### Configuration
 
-Create a `application.properties` or `application.yml` file with the following settings:
+The application uses `application.yml` for configuration. You can create profile-specific configurations using `application-{profile}.yml` files.
 
-```properties
-aws.region=us-west-2
-aws.transcribe.language=en-US
-aws.polly.voice=Joanna
+Example configuration:
+
+```yaml
+spring:
+  application:
+    name: bentham-voice-api
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# AWS Configuration
+aws:
+  region: us-west-2
+  transcribe:
+    language-code: en-US
+    sample-rate: 16000
+    enable-partial-results: true
+  polly:
+    voice-id: Joanna
+    output-format: mp3
+  bedrock:
+    model-id: anthropic.claude-3-sonnet-20240229-v1:0
+    temperature: 0.7
+    max-tokens: 1024
 ```
 
-## Usage
+## Development
 
-[Instructions on how to use the API will be added as development progresses]
+### Building the Project
+
+```
+./gradlew clean build
+```
+
+### Running Tests
+
+```
+./gradlew test
+```
+
+### Running the Application
+
+```
+./gradlew bootRun
+```
+
+Or with a specific profile:
+
+```
+./gradlew bootRun --args='--spring.profiles.active=dev'
+```
+
+## API Documentation
+
+API documentation will be available via Swagger UI at `/api/swagger-ui.html` once the application is running.
 
 ## Development Roadmap
 
