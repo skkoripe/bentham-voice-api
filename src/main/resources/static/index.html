@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bentham Voice API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .transcript {
+            border: 1px solid #ddd;
+            padding: 15px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status {
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stomp-websocket@2.3.4-next/lib/stomp.min.js"></script>
+</head>
+<body>
+    <h1>Bentham Voice API Test</h1>
+    
+    <div class="container">
+        <div class="status" id="status">Disconnected</div>
+        
+        <div class="controls">
+            <button id="connectBtn">Connect</button>
+            <button id="startBtn" disabled>Start Recording</button>
+            <button id="stopBtn" disabled>Stop Recording</button>
+            <button id="disconnectBtn" disabled>Disconnect</button>
+        </div>
+        
+        <div class="transcript" id="transcript"></div>
+    </div>
+
+    <script>
+        // DOM elements
+        const statusEl = document.getElementById('status');
+        const transcriptEl = document.getElementById('transcript');
+        const connectBtn = document.getElementById('connectBtn');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        
+        // State variables
+        let stompClient = null;
+        let mediaRecorder = null;
+        let audioContext = null;
+        let sessionId = null;
+        let isRecording = false;
+        
+        // Connect to WebSocket
+        connectBtn.addEventListener('click', connect);
+        startBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+        disconnectBtn.addEventListener('click', disconnect);
+        
+        function connect() {
+            const socket = new SockJS('/api/ws');
+            stompClient = Stomp.over(socket);
+            
+            // For debugging
+            console.log('Connecting to WebSocket...');
+            
+            stompClient.connect({}, frame => {
+                statusEl.textContent = 'Connected';
+                console.log('Connected: ' + frame);
+                
+                // Subscribe to the session topic
+                stompClient.subscribe('/topic/session', message => {
+                    console.log('Received session message:', message.body);
+                    const response = JSON.parse(message.body);
+                    sessionId = response.sessionId;
+                    addToTranscript('Session started: ' + sessionId);
+                });
+                
+                // Subscribe to the transcription topic
+                stompClient.subscribe('/topic/transcription', message => {
+                    console.log('Received transcription:', message.body);
+                    
+                    try {
+                        // Try to parse as TranscriptionResult object
+                        const result = JSON.parse(message.body);
+                        
+                        // Check if it's a TranscriptionResult object
+                        if (result.transcript) {
+                            addToTranscript(`Transcription ${result.isPartial ? '(partial)' : '(final)'}: ${result.transcript}`);
+                        } else {
+                            // Fallback for plain text responses
+                            addToTranscript('Transcription: ' + message.body);
+                        }
+                    } catch (e) {
+                        // Fallback for non-JSON responses
+                        addToTranscript('Transcription: ' + message.body);
+                    }
+                });
+                
+                // Subscribe to the ping response topic
+                stompClient.subscribe('/topic/pong', message => {
+                    const response = JSON.parse(message.body);
+                    addToTranscript('Ping response: ' + JSON.stringify(response));
+                });
+                
+                // Send a ping message to test the connection
+                stompClient.send('/app/ping', {}, JSON.stringify({message: 'ping'}));
+                
+                // Enable/disable buttons
+                connectBtn.disabled = true;
+                startBtn.disabled = false;
+                disconnectBtn.disabled = false;
+            }, error => {
+                console.error('Connection error:', error);
+                statusEl.textContent = 'Connection failed';
+            });
+        }
+        
+        function disconnect() {
+            if (isRecording) {
+                stopRecording();
+            }
+            
+            if (stompClient !== null) {
+                stompClient.disconnect();
+                stompClient = null;
+            }
+            
+            // Reset state
+            sessionId = null;
+            statusEl.textContent = 'Disconnected';
+            
+            // Enable/disable buttons
+            connectBtn.disabled = false;
+            startBtn.disabled = true;
+            stopBtn.disabled = true;
+            disconnectBtn.disabled = true;
+        }
+        
+        async function startRecording() {
+            try {
+                // Request microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // Start a new transcription session
+                stompClient.send('/app/transcription/start', {}, '');
+                console.log('Sent start transcription request');
+                
+                // Set up audio processing
+                setupAudioProcessing(stream);
+                
+                // Update UI
+                statusEl.textContent = 'Recording...';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                isRecording = true;
+                
+            } catch (error) {
+                console.error('Error starting recording:', error);
+                statusEl.textContent = 'Failed to access microphone';
+            }
+        }
+        
+        function setupAudioProcessing(stream) {
+            // Create an audio context
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({sampleRate: 16000});
+            const source = audioContext.createMediaStreamSource(stream);
+            
+            // Create a processor node for raw PCM data
+            const processor = audioContext.createScriptProcessor(4096, 1, 1);
+            
+            // Connect the nodes
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            // Process audio data
+            processor.onaudioprocess = event => {
+                if (!isRecording || !sessionId) return;
+                
+                // Get the raw PCM data
+                const inputData = event.inputBuffer.getChannelData(0);
+                
+                // Convert to 16-bit PCM
+                const pcmData = convertFloat32ToInt16(inputData);
+                
+                // Send to the server
+                stompClient.send('/app/transcription/audio', {}, pcmData);
+                console.log('Sent audio chunk, size:', pcmData.byteLength);
+            };
+            
+            // Create a media recorder as a backup
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+        }
+        
+        function stopRecording() {
+            if (!isRecording) return;
+            
+            // Stop the transcription session
+            if (sessionId) {
+                stompClient.send('/app/transcription/stop', {}, '');
+                console.log('Sent stop transcription request');
+            }
+            
+            // Stop audio processing
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+                mediaRecorder = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            // Update UI
+            statusEl.textContent = 'Connected';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            isRecording = false;
+        }
+        
+        function addToTranscript(text) {
+            const p = document.createElement('p');
+            p.textContent = text;
+            transcriptEl.appendChild(p);
+            transcriptEl.scrollTop = transcriptEl.scrollHeight;
+        }
+        
+        function convertFloat32ToInt16(buffer) {
+            const l = buffer.length;
+            const buf = new Int16Array(l);
+            
+            for (let i = 0; i < l; i++) {
+                // Convert from [-1, 1] to [-32768, 32767]
+                buf[i] = Math.min(1, Math.max(-1, buffer[i])) * 0x7FFF;
+            }
+            
+            return buf.buffer;
+        }
+    </script>
+</body>
+</html>

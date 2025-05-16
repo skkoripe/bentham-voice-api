@@ -40,12 +40,31 @@ dependencies {
 	// AWS SDK dependencies
 	implementation platform('software.amazon.awssdk:bom:2.25.0')
 	implementation 'software.amazon.awssdk:transcribe'  // For Speech-to-Text
+	implementation 'software.amazon.awssdk:transcribestreaming'  // For Streaming Speech-to-Text
 	implementation 'software.amazon.awssdk:polly'       // For Text-to-Speech
 	implementation 'software.amazon.awssdk:s3'          // For storage if needed
 	implementation 'software.amazon.awssdk:cloudwatch'  // For logging and metrics
 	
+	// Reactive streams support for AWS SDK
+	implementation 'org.reactivestreams:reactive-streams:1.0.4'
+	implementation 'io.projectreactor:reactor-core:3.5.11'
+	
+	// Reactive streams support for AWS SDK
+	implementation 'org.reactivestreams:reactive-streams:1.0.4'
+	implementation 'io.projectreactor:reactor-core:3.5.11'
+	
+	// WebSocket and messaging
+	implementation 'org.springframework:spring-websocket'
+	implementation 'org.springframework:spring-messaging'
+	implementation 'org.webjars:webjars-locator-core'
+	implementation 'org.webjars:sockjs-client:1.5.1'
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+	
 	// Audio processing
-//	implementation 'com.googlecode.soundlibs:jlayer:1.0.1'  // For MP3 playback (Polly output)
+	implementation 'javazoom:jlayer:1.0.1'  // For MP3 playback (Polly output)
+	
+	// JSON processing
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

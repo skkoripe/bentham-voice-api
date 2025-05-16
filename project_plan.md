@@ -40,12 +40,13 @@ This project plan outlines the implementation of the Bentham Voice API, a sophis
 - [x] Create basic service interfaces for AWS services
 - [x] Write unit tests for configuration classes
 
-#### Day 3: Speech-to-Text Module
-- [ ] Design STT service interface
-- [ ] Implement Amazon Transcribe integration
-- [ ] Create audio capture utility
-- [ ] Implement streaming transcription
-- [ ] Write unit tests for STT service
+#### Day 3: Speech-to-Text Module (Partially Completed on May 16, 2025)
+- [x] Design STT service interface
+- [x] Implement Amazon Transcribe integration
+- [x] Create audio capture utility
+- [x] Implement streaming transcription
+- [x] Set up browser-based testing infrastructure
+- [x] Write unit tests for STT service
 
 #### Day 4: Text-to-Speech Module
 - [ ] Design TTS service interface
@@ -105,6 +106,7 @@ This project plan outlines the implementation of the Bentham Voice API, a sophis
 - [ ] Implement real-time audio streaming
 - [ ] Create bidirectional communication channels
 - [ ] Add connection management
+- [ ] Enhance browser-based testing interface
 - [ ] Write unit tests for WebSocket functionality
 
 #### Day 12: Security Implementation
@@ -210,6 +212,7 @@ This project plan outlines the implementation of the Bentham Voice API, a sophis
 - Build request/response DTOs
 - Implement input validation
 - Create error handling controllers
+- Develop browser-based test interface for local testing
 
 ### Testing Strategy
 
@@ -224,6 +227,13 @@ This project plan outlines the implementation of the Bentham Voice API, a sophis
 - Verify AWS service integration
 - Test API endpoints
 - Validate conversation flow
+
+#### Browser-Based Testing
+- Test the application through a web interface
+- Capture audio directly from the browser
+- Stream audio to the backend via WebSockets
+- Verify real-time transcription and response
+- Test the complete user experience locally
 
 #### End-to-End Testing
 - Test complete conversation scenarios

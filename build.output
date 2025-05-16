@@ -1,0 +1,52 @@
+> Task :compileJava
+> Task :processResources
+> Task :classes
+> Task :resolveMainClassName
+> Task :bootJar
+> Task :bootStartScripts
+> Task :bootDistTar
+> Task :bootDistZip
+> Task :jar
+> Task :startScripts
+> Task :distTar
+> Task :distZip
+> Task :assemble
+
+> Task :compileTestJava
+
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test
+
+AmazonTranscribeServiceTest > stopStreamingTranscriptionShouldReturnFinalTranscription() FAILED
+    org.opentest4j.AssertionFailedError at AmazonTranscribeServiceTest.java:93
+
+StreamingTranscriptionHandlerTest > addAudioChunkShouldProcessAudio() FAILED
+    org.mockito.exceptions.verification.WantedButNotInvoked at StreamingTranscriptionHandlerTest.java:64
+
+2025-05-16T17:19:29.824+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-05-16T17:19:29.825+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@3a66d97e]]
+2025-05-16T17:19:29.825+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-05-16T17:19:29.830+05:30  WARN 26559 --- [bentham-voice-api] [ionShutdownHook] s.a.a.p.internal.ProfileFileReader       : Ignoring profile 'DEFAULT' on line 1 because it did not start with 'profile ' and it was not 'default'.
+2025-05-16T17:19:29.835+05:30  WARN 26559 --- [bentham-voice-api] [ionShutdownHook] s.a.a.p.internal.ProfileFileReader       : Ignoring profile 'DEFAULT' on line 1 because it did not start with 'profile ' and it was not 'default'.
+2025-05-16T17:19:29.839+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-05-16T17:19:29.839+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@578483bd]]
+2025-05-16T17:19:29.839+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-05-16T17:19:29.842+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-05-16T17:19:29.842+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6d5b160]]
+2025-05-16T17:19:29.842+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-05-16T17:19:29.845+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-05-16T17:19:29.845+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@72933ccb]]
+2025-05-16T17:19:29.845+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-05-16T17:19:29.846+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-05-16T17:19:29.846+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@54353bb1]]
+2025-05-16T17:19:29.846+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-05-16T17:19:29.848+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-05-16T17:19:29.848+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@56357e52]]
+2025-05-16T17:19:29.848+05:30  INFO 26559 --- [bentham-voice-api] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+
+> Task :test FAILED
+
+[Incubating] Problems report is available at: file:///Volumes/workspace/side_projects/Bentham/bentham-voice-api/build/reports/problems/problems-report.html
+13 actionable tasks: 13 executed
